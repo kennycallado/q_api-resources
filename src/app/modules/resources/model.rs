@@ -1,7 +1,7 @@
 // use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
-use crate::database::schema::resources;
+use crate::{database::schema::resources, app::providers::interfaces::slide::PubSlide};
 
 // use crate::app::modules::slides::model::{NewSlide, Slide, UpdateSlide};
 
@@ -36,7 +36,7 @@ impl From<Resource> for NewResource {
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(crate = "rocket::serde")]
 pub struct ResourceContent {
-    pub slides: Option<Vec<i32>>,
+    pub slides: Option<Vec<PubSlide>>,
     pub form: Option<i32>,
     pub external: Option<i32>,
 }
@@ -67,31 +67,31 @@ pub struct NewResourceContent {
 //     pub external: Option<String>,
 // }
 
-// #[derive(Debug, Clone, Deserialize, Serialize)]
-// #[serde(crate = "rocket::serde")]
-// pub struct ResourceComplete {
-//     pub id: i32,
-//     pub resource_type: String,
-//     pub title: String,
-//     pub description: String,
-//     pub content: Option<ResourceContent>,
-//     pub created_at: NaiveDateTime,
-//     pub updated_at: NaiveDateTime,
-// }
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(crate = "rocket::serde")]
+pub struct ResourceComplete {
+    pub id: i32,
+    pub resource_type: String,
+    pub title: String,
+    pub description: String,
+    pub content: Option<ResourceContent>,
+    // pub created_at: NaiveDateTime,
+    // pub updated_at: NaiveDateTime,
+}
 
-// impl From<Resource> for ResourceComplete {
-//     fn from(resource: Resource) -> Self {
-//         ResourceComplete {
-//             id: resource.id,
-//             resource_type: resource.resource_type,
-//             title: resource.title,
-//             description: resource.description,
-//             content: None,
-//             created_at: resource.created_at,
-//             updated_at: resource.updated_at,
-//         }
-//     }
-// }
+impl From<Resource> for ResourceComplete {
+    fn from(resource: Resource) -> Self {
+        ResourceComplete {
+            id: resource.id,
+            resource_type: resource.resource_type,
+            title: resource.title,
+            description: resource.description,
+            content: None,
+            // created_at: resource.created_at,
+            // updated_at: resource.updated_at,
+        }
+    }
+}
 
 // #[derive(Debug, Clone, Deserialize, Serialize)]
 // #[serde(crate = "rocket::serde")]

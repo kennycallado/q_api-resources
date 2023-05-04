@@ -6,7 +6,7 @@ use crate::config::database::Db;
 
 use crate::app::modules::resources::handlers::{ create, index, show, update };
 
-use crate::app::modules::resources::model::{ NewResource, Resource };
+use crate::app::modules::resources::model::{ NewResource, Resource, ResourceComplete };
 
 pub fn routes() -> Vec<rocket::Route> {
     routes![
@@ -47,7 +47,7 @@ pub fn get_index_none() -> Status {
 }
 
 #[get("/<id>", rank = 101)]
-pub async fn get_show(db: Db, claims: AccessClaims, id: i32) -> Result<Json<Resource>, Status> {
+pub async fn get_show(db: Db, claims: AccessClaims, id: i32) -> Result<Json<ResourceComplete>, Status> {
     match claims.0.user.role.name.as_str() {
         "admin" => show::get_show_admin(&db, claims.0.user, id).await,
         _ => Err(Status::Unauthorized),
