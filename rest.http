@@ -35,11 +35,104 @@ GET http://localhost:8000/health
 GET http://localhost:8003/auth/bypass/1
 Accept: application/json
 
-# {{{ example
+# {{{ resources
 
-GET http://localhost:8000/api/v1/example
+GET http://localhost:8000/api/v1/resource
 Accept: application/json
-Authorization: Bearer <token>
-Content-type: application/json
+Authorization: Bearer 
+
+GET http://localhost:8000/api/v1/resource/1
+Accept: application/json
+Authorization: Bearer 
+
+POST http://localhost:8000/api/v1/resource
+Accept: application/json
+Authorization: Bearer 
+Content-Type: application/json
+
+{
+  "resource_type": "slides",
+  "title": "Título 4",
+  "description": ""
+}
+
+PUT http://localhost:8000/api/v1/resource/4
+Accept: application/json
+Authorization: Bearer 
+Content-Type: application/json
+
+{
+  "resource_type": "slides",
+  "title": "Título 4",
+  "description": "Descripción para el título 4"
+}
+
+### Pendiente ->
+
+POST http://localhost:8000/api/v1/resource
+Accept: application/json
+Authorization: Bearer 
+Content-Type: application/json
+
+{
+  "resource_type": "form",
+  "title": "Título 4",
+  "description": "",
+  "content": {
+    "form": "hola caracola"
+  }
+}
+
+POST http://localhost:8000/api/v1/resource
+Accept: application/json
+Authorization: Bearer 
+Content-Type: application/json
+
+{
+  "resource_type": "slides",
+  "title": "Título 4",
+  "description": "",
+  "content": {
+    "slides": [
+      {
+        "slide_type": "content",
+        "content": "",
+        "title": "Título 9"
+      },
+      {
+        "slide_type": "content",
+        "content": "Content del título 5",
+        "title": "Título 10"
+      }
+    ]
+  }
+}
+
+PUT http://localhost:8000/api/v1/resource/4
+Accept: application/json
+Authorization: Bearer 
+Content-Type: application/json
+
+{
+  "resource_type": "slides",
+  "title": "Título 4",
+  "description": "",
+  "content": {
+    "slides": [
+      {
+        "id": 9,
+        "slide_type": "content",
+        "content": "Content del título 9",
+        "title": "Título 9"
+      },
+      {
+        "id": 10,
+        "slide_type": "content",
+        "content": "Content del título 10",
+        "title": "Título 10"
+      }
+    ]
+  }
+}
 
 # }}}
