@@ -8,6 +8,8 @@ ALTER TABLE resources
   ADD COLUMN created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
   ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
+ALTER TABLE resources ADD CONSTRAINT resources_resource_type_check CHECK (resource_type IN ('slides', 'module', 'form', 'external'));
+
 SELECT diesel_manage_updated_at('resources');
 INSERT INTO resources (resource_type, title, description) VALUES
   ('slides', 'Título 1', 'Descripción del título 1'),
