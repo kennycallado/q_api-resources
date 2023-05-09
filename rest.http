@@ -41,7 +41,7 @@ GET http://localhost:8000/api/v1/resource
 Accept: application/json
 Authorization: Bearer 
 
-GET http://localhost:8000/api/v1/resource/4
+GET http://localhost:8000/api/v1/resource/5
 Accept: application/json
 Authorization: Bearer 
 
@@ -81,11 +81,9 @@ Content-Type: application/json
   }
 }
 
-GET http://localhost:8000/api/v1/resource/8
+GET http://localhost:8000/api/v1/resource/7
 Accept: application/json
 Authorization: Bearer 
-
-### Pendiente ->
 
 POST http://localhost:8000/api/v1/resource
 Accept: application/json
@@ -97,9 +95,15 @@ Content-Type: application/json
   "title": "Título 4",
   "description": "",
   "content": {
-    "form": 1
+    "form": [ 5, 3, 1, 4 ]
   }
 }
+
+GET http://localhost:8000/api/v1/resource/5
+Accept: application/json
+Authorization: Bearer 
+
+### Pendiente ->
 
 PUT http://localhost:8000/api/v1/resource/6
 Accept: application/json
