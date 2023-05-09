@@ -10,7 +10,7 @@ ALTER TABLE resources
 
 ALTER TABLE resources ADD CONSTRAINT resources_resource_type_check CHECK (resource_type IN ('slides', 'module', 'form', 'external'));
 
-SELECT diesel_manage_updated_at('resources');
+-- SELECT diesel_manage_updated_at('resources');
 INSERT INTO resources (resource_type, title, description) VALUES
   ('slides', 'Título 1', 'Descripción del título 1'),
   ('slides', 'Título 2', 'Descripción del título 2'),
