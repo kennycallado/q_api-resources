@@ -1,4 +1,3 @@
-// use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
 use crate::{database::schema::resources, app::providers::interfaces::slide::PubSlide};
@@ -41,11 +40,13 @@ impl From<NewResourceWithNewContent> for NewResource {
     }
 }
 
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(crate = "rocket::serde")]
 pub struct NewResourceWithNewContent {
     pub resource_type: String,
     pub title: String,
     pub description: String,
-    pub content: Option<NewResourceContent>,
+    pub content: Option<NewContent>,
 }
 
 impl From<Resource> for NewResourceWithNewContent {
@@ -77,7 +78,7 @@ pub struct ResourceComplete {
     pub resource_type: String,
     pub title: String,
     pub description: String,
-    pub content: Option<ResourceContentComplete>,
+    pub content: Option<ContentComplete>,
 }
 
 impl From<Resource> for ResourceComplete {
@@ -94,15 +95,25 @@ impl From<Resource> for ResourceComplete {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(crate = "rocket::serde")]
-pub struct ResourceContent {
+pub struct ResourceWithContent {
+    pub id: i32,
+    pub resource_type: String,
+    pub title: String,
+    pub description: String,
+    pub content: Option<Content>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(crate = "rocket::serde")]
+pub struct Content {
     pub slides: Option<Vec<i32>>,
     pub form: Option<i32>,
     pub external: Option<i32>,
 }
 
-impl Default for ResourceContent {
+impl Default for Content {
     fn default() -> Self {
-        ResourceContent {
+        Content {
             slides: None,
             form: None,
             external: None,
@@ -112,7 +123,7 @@ impl Default for ResourceContent {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(crate = "rocket::serde")]
-pub struct NewResourceContent {
+pub struct NewContent {
     pub slides: Option<Vec<i32>>,
     pub form: Option<i32>,
     pub external: Option<i32>,
@@ -120,7 +131,7 @@ pub struct NewResourceContent {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(crate = "rocket::serde")]
-pub struct ResourceContentComplete {
+pub struct ContentComplete {
     pub slides: Option<Vec<PubSlide>>,
     pub form: Option<i32>,
     pub external: Option<i32>,
