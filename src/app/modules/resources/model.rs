@@ -3,8 +3,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::{database::schema::resources, app::providers::interfaces::slide::PubSlide};
 
-// use crate::app::modules::slides::model::{NewSlide, Slide, UpdateSlide};
-
 #[derive(Debug, Clone, Deserialize, Serialize, Queryable, Identifiable)]
 #[serde(crate = "rocket::serde")]
 pub struct Resource {

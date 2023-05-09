@@ -6,6 +6,7 @@ use crate::config::database::Db;
 use crate::app::providers::interfaces::helpers::claims::UserInClaims;
 
 use crate::app::modules::resource_slides::services::repository as rs_repository;
+use crate::app::modules::resource_module::services::repository as rm_repository;
 
 use crate::app::modules::resources::model::{ResourceContent, ResourceComplete};
 use crate::app::modules::resources::services::repository as resources_repository;
@@ -47,7 +48,30 @@ pub async fn get_show_admin(db: &Db, _admin: UserInClaims, id: i32) -> Result<Js
                 },// Algo fué mal ??
                 Err(_) => return Err(Status::InternalServerError),
             }
-        }
+        },
+        "module" => {
+            match rm_repository::get_slide_ids_by_resource_id(db, id).await {
+                Ok(ids) => {
+
+                    match rm_repository::get_multiple_slides(ids).await {
+                        Ok(slides) => {
+                            let content = ResourceContent {
+                                slides: Some(slides),
+                                form: None,
+                                external: None,
+                            };
+
+                            let mut resource_complete: ResourceComplete = resource.into();
+                            resource_complete.content = Some(content);
+
+                            return Ok(Json(resource_complete));
+                        },
+                        Err(_) => return Err(Status::InternalServerError),
+                    }
+                },
+                Err(_) => return Err(Status::InternalServerError),
+            }
+        },
         "form" => {
             let content = ResourceContent {
                 slides: None,
