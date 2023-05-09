@@ -7,7 +7,10 @@ use crate::database::schema::resource_slides;
 
 use crate::app::providers::interfaces::helpers::claims::{Claims, UserInClaims};
 use crate::app::providers::interfaces::helpers::config_getter::ConfigGetter;
+
 use crate::app::providers::interfaces::slide::PubSlide;
+
+use crate::app::modules::resource_slides::model::NewResourceSlide;
 
 pub async fn get_slide_ids_by_resource_id(db: &Db,id: i32) -> Result<Vec<i32>, diesel::result::Error> {
     let slide_ids = db
@@ -55,39 +58,39 @@ pub async fn get_multiple_slides(ids: Vec<i32>) -> Result<Vec<PubSlide>, Status>
     }
 }
 
-pub async fn get_slide_by_id(id: i32) -> Result<PubSlide, Status> {
-    // Prepare token for robot
-    let robot_token = robot_token_generator().await;
-    if let Err(_) = robot_token {
-        return Err(Status::InternalServerError);
-    }
-    let robot_token = robot_token.unwrap();
+// pub async fn get_slide_by_id(id: i32) -> Result<PubSlide, Status> {
+//     // Prepare token for robot
+//     let robot_token = robot_token_generator().await;
+//     if let Err(_) = robot_token {
+//         return Err(Status::InternalServerError);
+//     }
+//     let robot_token = robot_token.unwrap();
 
-    // Prepare url for slide
-    let slide_url = ConfigGetter::get_entity_url("slide").unwrap_or("http://localhost:8021/api/v1/slide".to_string())
-        + "/"
-        + &id.to_string();
+//     // Prepare url for slide
+//     let slide_url = ConfigGetter::get_entity_url("slide").unwrap_or("http://localhost:8021/api/v1/slide".to_string())
+//         + "/"
+//         + &id.to_string();
 
-    // Request slide
-    let client = reqwest::Client::new();
-    let res = client
-        .get(&slide_url)
-        .header("Accept", "application/json")
-        .header("Authorization", robot_token)
-        .send()
-        .await;
+//     // Request slide
+//     let client = reqwest::Client::new();
+//     let res = client
+//         .get(&slide_url)
+//         .header("Accept", "application/json")
+//         .header("Authorization", robot_token)
+//         .send()
+//         .await;
 
-    match res {
-        Ok(res) => {
-            if res.status() != 200 {
-                return Err(Status::from_code(res.status().as_u16()).unwrap());
-            }
+//     match res {
+//         Ok(res) => {
+//             if res.status() != 200 {
+//                 return Err(Status::from_code(res.status().as_u16()).unwrap());
+//             }
 
-            Ok(res.json::<PubSlide>().await.unwrap())
-        }
-        Err(_) => return Err(Status::InternalServerError),
-    }
-}
+//             Ok(res.json::<PubSlide>().await.unwrap())
+//         }
+//         Err(_) => return Err(Status::InternalServerError),
+//     }
+// }
 
 async fn robot_token_generator() -> Result<String, Status> {
     let mut claims: Claims = Claims::from(UserInClaims::default());
@@ -103,4 +106,25 @@ async fn robot_token_generator() -> Result<String, Status> {
             return Err(Status::InternalServerError);
         }
     }
+}
+
+pub async fn add_slides(db: &Db, resouce_id: i32, slides: Vec<i32>) -> Result<usize, diesel::result::Error> {
+    let mut new_slides: Vec<NewResourceSlide> = Vec::new();
+
+    for slide in slides {
+        new_slides.push(NewResourceSlide {
+            resource_id: resouce_id,
+            slide_id: slide,
+        });
+    }
+
+    let inserted_slides = db
+        .run(move |conn| {
+            diesel::insert_into(resource_slides::table)
+                .values(&new_slides)
+                .execute(conn)
+        })
+        .await;
+
+    inserted_slides
 }

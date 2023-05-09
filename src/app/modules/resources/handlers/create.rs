@@ -5,16 +5,81 @@ use crate::config::database::Db;
 
 use crate::app::providers::interfaces::helpers::claims::UserInClaims;
 
-use crate::app::modules::resources::model::{ NewResource, Resource };
+use crate::app::modules::resource_slides::services::repository as rs_repository;
+use crate::app::modules::resource_module::services::repository as rm_repository;
+
+use crate::app::modules::resources::model::{ NewResourceWithNewContent, ResourceWithContent, Content };
 use crate::app::modules::resources::services::repository as resources_repository;
 
-pub async fn post_create_admin(db: &Db, _admin: UserInClaims, new_resource: NewResource) -> Result<Json<Resource>, Status> {
-    let resource = resources_repository::create(db, new_resource).await;
+pub async fn post_create_admin(db: &Db, _admin: UserInClaims, new_resource: NewResourceWithNewContent) -> Result<Json<ResourceWithContent>, Status> {
+    let content = new_resource.content.clone();
+    let resource = resources_repository::create(db, new_resource.into()).await;
 
-    match resource {
-        Ok(resource) => Ok(Json(resource)),
-        Err(_) => Err(Status::InternalServerError),
-    }
+    let resource_content: ResourceWithContent = match resource {
+        Ok(resource) => {
+            match content {
+                Some(new_content) => {
+                    let mut content = Content {
+                        slides: None,
+                        form: None,
+                        external: None,
+                    };
+
+                    match new_content.slides {
+                        Some(slides) => {
+                            let resource_slides = match resource.resource_type.as_str() {
+                                "module" => rm_repository::add_slides(db, resource.id, slides.clone()).await,
+                                "slide"  => rs_repository::add_slides(db, resource.id, slides.clone()).await,
+                                _ => return Err(Status::InternalServerError),
+                            };
+
+                            match resource_slides {
+                                Ok(_) => {
+                                    content.slides = Some(slides);
+                                },
+                                Err(_) => return Err(Status::InternalServerError),
+                            }
+                        },
+                        None => {},
+                    }
+
+                    // Lo mismo para form y para external
+
+                    ResourceWithContent {
+                        id: resource.id,
+                        title: resource.title,
+                        description: resource.description,
+                        resource_type: resource.resource_type,
+                        content: Some(content),
+                    }
+                },
+                None => {
+                    ResourceWithContent {
+                        id: resource.id,
+                        title: resource.title,
+                        description: resource.description,
+                        resource_type: resource.resource_type,
+                        content: None,
+                    }
+                },
+            }
+        },
+        Err(_) => return Err(Status::InternalServerError),
+    };
+
+    // resource_complete = ResourceComplete {
+    //     id: resource.id,
+    //     title: resource.title,
+    //     description: resource.description,
+    //     resource_type: resource.resource_type,
+    //     content: None,
+    // };
+
+    // match resource {
+    //     Ok(resource) => Ok(Json(resource)),
+    //     Err(_) => Err(Status::InternalServerError),
+    // }
+    Ok(Json(resource_content))
 }
 
 // async fn post_create_admin_old(db: &Db, _admin: UserInClaims, new_resource: NewResource) -> Result<Json<Resource>, Status> {

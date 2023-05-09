@@ -6,7 +6,7 @@ use crate::config::database::Db;
 
 use crate::app::modules::resources::handlers::{ create, index, show, update };
 
-use crate::app::modules::resources::model::{ NewResource, Resource, ResourceComplete };
+use crate::app::modules::resources::model::{ NewResource, Resource, ResourceComplete, NewResourceWithNewContent, ResourceWithContent };
 
 pub fn routes() -> Vec<rocket::Route> {
     routes![
@@ -60,7 +60,7 @@ pub fn get_show_none(_id: i32) -> Status {
 }
 
 #[post("/", data = "<new_resource>", rank = 1)]
-pub async fn post_create(db: Db, claims: AccessClaims, new_resource: Json<NewResource>) -> Result<Json<Resource>, Status> {
+pub async fn post_create(db: Db, claims: AccessClaims, new_resource: Json<NewResourceWithNewContent>) -> Result<Json<ResourceWithContent>, Status> {
     match claims.0.user.role.name.as_str() {
         "admin" => create::post_create_admin(&db, claims.0.user, new_resource.into_inner()).await,
         _ => Err(Status::Unauthorized),
