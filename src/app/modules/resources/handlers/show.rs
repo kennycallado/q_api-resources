@@ -8,7 +8,7 @@ use crate::app::providers::interfaces::helpers::claims::UserInClaims;
 use crate::app::modules::resource_slides::services::repository as rs_repository;
 use crate::app::modules::resource_module::services::repository as rm_repository;
 
-use crate::app::modules::resources::model::{ResourceContent, ResourceComplete};
+use crate::app::modules::resources::model::{ResourceContentComplete, ResourceComplete};
 use crate::app::modules::resources::services::repository as resources_repository;
 
 pub async fn get_show_admin(db: &Db, _admin: UserInClaims, id: i32) -> Result<Json<ResourceComplete>, Status> {
@@ -32,7 +32,7 @@ pub async fn get_show_admin(db: &Db, _admin: UserInClaims, id: i32) -> Result<Js
 
                     match rs_repository::get_multiple_slides(ids).await {
                         Ok(slides) => {
-                            let content = ResourceContent {
+                            let content = ResourceContentComplete {
                                 slides: Some(slides),
                                 form: None,
                                 external: None,
@@ -55,7 +55,7 @@ pub async fn get_show_admin(db: &Db, _admin: UserInClaims, id: i32) -> Result<Js
 
                     match rm_repository::get_multiple_slides(ids).await {
                         Ok(slides) => {
-                            let content = ResourceContent {
+                            let content = ResourceContentComplete {
                                 slides: Some(slides),
                                 form: None,
                                 external: None,
@@ -73,7 +73,7 @@ pub async fn get_show_admin(db: &Db, _admin: UserInClaims, id: i32) -> Result<Js
             }
         },
         "form" => {
-            let content = ResourceContent {
+            let content = ResourceContentComplete {
                 slides: None,
                 form: None,
                 external: None,
@@ -85,7 +85,7 @@ pub async fn get_show_admin(db: &Db, _admin: UserInClaims, id: i32) -> Result<Js
             return Ok(Json(resource_complete));
         },
         "external" => {
-            let content = ResourceContent {
+            let content = ResourceContentComplete {
                 slides: None,
                 form: None,
                 external: None,
