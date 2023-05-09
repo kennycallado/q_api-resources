@@ -7,6 +7,7 @@ use crate::app::providers::interfaces::helpers::claims::UserInClaims;
 
 use crate::app::modules::resource_slides::services::repository as rs_repository;
 use crate::app::modules::resource_module::services::repository as rm_repository;
+use crate::app::modules::resource_form::services::repository as rf_repository;
 
 use crate::app::modules::resources::model::{ NewResourceWithNewContent, ResourceWithContent, Content };
 use crate::app::modules::resources::services::repository as resources_repository;
@@ -36,6 +37,20 @@ pub async fn post_create_admin(db: &Db, _admin: UserInClaims, new_resource: NewR
                             match resource_slides {
                                 Ok(_) => {
                                     content.slides = Some(slides);
+                                },
+                                Err(_) => return Err(Status::InternalServerError),
+                            }
+                        },
+                        None => {},
+                    }
+
+                    match new_content.form {
+                        Some(form) => {
+                            let resource_form = rf_repository::add_questions(db, resource.id, form.clone()).await;
+
+                            match resource_form {
+                                Ok(_) => {
+                                    content.form = Some(form);
                                 },
                                 Err(_) => return Err(Status::InternalServerError),
                             }

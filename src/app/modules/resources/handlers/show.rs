@@ -7,6 +7,7 @@ use crate::app::providers::interfaces::helpers::claims::UserInClaims;
 
 use crate::app::modules::resource_slides::services::repository as rs_repository;
 use crate::app::modules::resource_module::services::repository as rm_repository;
+use crate::app::modules::resource_form::services::repository   as rf_repository;
 
 use crate::app::modules::resources::model::{ContentComplete, ResourceComplete};
 use crate::app::modules::resources::services::repository as resources_repository;
@@ -73,16 +74,27 @@ pub async fn get_show_admin(db: &Db, _admin: UserInClaims, id: i32) -> Result<Js
             }
         },
         "form" => {
-            let content = ContentComplete {
-                slides: None,
-                form: None,
-                external: None,
-            };
+            match rf_repository::get_question_ids_by_resource_id(db, id).await {
+                Ok(ids) => {
 
-            let mut resource_complete: ResourceComplete = resource.into();
-            resource_complete.content = Some(content);
+                    match rf_repository::get_multiple_questions(ids).await {
+                        Ok(questions) => {
+                            let content = ContentComplete {
+                                slides: None,
+                                form: Some(questions),
+                                external: None,
+                            };
 
-            return Ok(Json(resource_complete));
+                            let mut resource_complete: ResourceComplete = resource.into();
+                            resource_complete.content = Some(content);
+
+                            return Ok(Json(resource_complete));
+                        },
+                        Err(_) => return Err(Status::InternalServerError),
+                    }
+                },
+                Err(_) => return Err(Status::InternalServerError),
+            }
         },
         "external" => {
             let content = ContentComplete {
