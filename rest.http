@@ -41,7 +41,7 @@ GET http://localhost:8000/api/v1/resource
 Accept: application/json
 Authorization: Bearer 
 
-GET http://localhost:8000/api/v1/resource/1
+GET http://localhost:8000/api/v1/resource/4
 Accept: application/json
 Authorization: Bearer 
 
@@ -52,19 +52,19 @@ Content-Type: application/json
 
 {
   "resource_type": "slides",
-  "title": "Título 4",
+  "title": "Título 5",
   "description": ""
 }
 
-PUT http://localhost:8000/api/v1/resource/4
+PUT http://localhost:8000/api/v1/resource/5
 Accept: application/json
 Authorization: Bearer 
 Content-Type: application/json
 
 {
-  "resource_type": "slides",
-  "title": "Título 4",
-  "description": "Descripción para el título 4"
+  "resource_type": "module",
+  "title": "Título 5",
+  "description": "Descripción para el título 5"
 }
 
 ### Pendiente ->
