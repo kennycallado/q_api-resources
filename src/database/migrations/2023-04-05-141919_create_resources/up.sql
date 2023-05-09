@@ -15,7 +15,8 @@ INSERT INTO resources (resource_type, title, description) VALUES
   ('slides', 'Título 1', 'Descripción del título 1'),
   ('slides', 'Título 2', 'Descripción del título 2'),
   ('slides', 'Título 3', 'Descripción del título 3'),
-  ('module', 'Título 4', 'Descripción del título 4')
+  ('module', 'Título 4', 'Descripción del título 4'),
+  ('form'  , 'Título 5', 'Descripción del título 5')
   ;
 
 -- Idea de copilot
