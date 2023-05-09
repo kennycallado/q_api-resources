@@ -53,7 +53,6 @@ services:
       - ROCKET_MIGRATIONS_RUN=true
       - ROCKET_DATABASES={questions={url="postgres://resources:resources@database/resources"}}
     depends_on:
-      - database
       - fcm_api 
   # }}}
   
@@ -71,7 +70,6 @@ services:
       - ROCKET_MIGRATIONS_RUN=true
       - ROCKET_DATABASES={questions={url="postgres://resources:resources@database/resources"}}
     depends_on:
-      - database
       - profiles_api
   # }}}
 
@@ -99,7 +97,7 @@ services:
 # {{{ questions - answers
   # {{{ questions
   questions_api:
-    image: kennycallado/q-api-answers:latest
+    image: kennycallado/q-api-questions:latest
     ports:
       - "8011:8000"
     expose:
@@ -111,12 +109,12 @@ services:
       - ROCKET_MIGRATIONS_RUN=true
       - ROCKET_DATABASES={questions={url="postgres://resources:resources@database/resources"}}
     depends_on:
-      - users_api
+      - auth_api
   # }}}
 
   # {{{ ansers
   answers_api:
-    image: kennycallado/q-api-questions:latest
+    image: kennycallado/q-api-answers:latest
     ports:
       - "8012:8000"
     expose:
@@ -170,7 +168,7 @@ services:
   #     - questions_api
   #     - slides_api
   # # }}}
-  # 
+   
   # # {{{ externals
   # externals_api:
   #   image: kennycallado/q-api-externals:latest
