@@ -8,8 +8,7 @@ ALTER TABLE resource_module
   ADD CONSTRAINT fk_rm_resource_id FOREIGN KEY (resource_id) REFERENCES resources (id) ON DELETE CASCADE;
 
 INSERT INTO resource_module (resource_id, slide_id) VALUES
-  (1, 2),
-  (1, 3),
-  (2, 4),
-  (2, 5)
+  (4, 2),
+  (4, 3),
+  (4, 4)
   ;

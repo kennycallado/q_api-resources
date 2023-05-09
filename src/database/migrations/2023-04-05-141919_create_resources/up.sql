@@ -14,7 +14,8 @@ ALTER TABLE resources ADD CONSTRAINT resources_resource_type_check CHECK (resour
 INSERT INTO resources (resource_type, title, description) VALUES
   ('slides', 'Título 1', 'Descripción del título 1'),
   ('slides', 'Título 2', 'Descripción del título 2'),
-  ('slides', 'Título 3', 'Descripción del título 3')
+  ('slides', 'Título 3', 'Descripción del título 3'),
+  ('module', 'Título 4', 'Descripción del título 4')
   ;
 
 -- Idea de copilot
