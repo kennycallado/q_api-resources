@@ -22,8 +22,6 @@ diesel::table! {
         resource_type -> Varchar,
         title -> Varchar,
         description -> Varchar,
-        created_at -> Timestamptz,
-        updated_at -> Timestamptz,
     }
 }
 
