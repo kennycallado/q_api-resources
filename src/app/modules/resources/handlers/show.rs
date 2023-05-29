@@ -1,9 +1,11 @@
 use rocket::http::Status;
+use rocket::State;
 use rocket::serde::json::Json;
 
 use crate::config::database::Db;
 
 use crate::app::providers::interfaces::helpers::claims::UserInClaims;
+use crate::app::providers::interfaces::helpers::fetch::Fetch;
 
 use crate::app::modules::resource_slides::services::repository as rs_repository;
 use crate::app::modules::resource_module::services::repository as rm_repository;
@@ -12,7 +14,7 @@ use crate::app::modules::resource_form::services::repository   as rf_repository;
 use crate::app::modules::resources::model::{ContentComplete, ResourceComplete};
 use crate::app::modules::resources::services::repository as resources_repository;
 
-pub async fn get_show_admin(db: &Db, _admin: UserInClaims, id: i32) -> Result<Json<ResourceComplete>, Status> {
+pub async fn get_show_admin(fetch: &State<Fetch>, db: &Db, _admin: UserInClaims, id: i32) -> Result<Json<ResourceComplete>, Status> {
     // get the resource
     // get the resouce type
     // - get the slides
@@ -31,7 +33,7 @@ pub async fn get_show_admin(db: &Db, _admin: UserInClaims, id: i32) -> Result<Js
             match rs_repository::get_slide_ids_by_resource_id(db, id).await {
                 Ok(ids) => {
 
-                    match rs_repository::get_multiple_slides(ids).await {
+                    match rs_repository::get_multiple_slides(fetch, ids).await {
                         Ok(slides) => {
                             let content = ContentComplete {
                                 slides: Some(slides),
@@ -54,7 +56,7 @@ pub async fn get_show_admin(db: &Db, _admin: UserInClaims, id: i32) -> Result<Js
             match rm_repository::get_slide_ids_by_resource_id(db, id).await {
                 Ok(ids) => {
 
-                    match rm_repository::get_multiple_slides(ids).await {
+                    match rm_repository::get_multiple_slides(fetch, ids).await {
                         Ok(slides) => {
                             let content = ContentComplete {
                                 slides: Some(slides),
@@ -77,7 +79,7 @@ pub async fn get_show_admin(db: &Db, _admin: UserInClaims, id: i32) -> Result<Js
             match rf_repository::get_question_ids_by_resource_id(db, id).await {
                 Ok(ids) => {
 
-                    match rf_repository::get_multiple_questions(ids).await {
+                    match rf_repository::get_multiple_questions(fetch, ids).await {
                         Ok(questions) => {
                             let content = ContentComplete {
                                 slides: None,

@@ -1,12 +1,14 @@
 use diesel::prelude::*;
 
 use rocket::http::Status;
+use rocket::State;
 
 use crate::config::database::Db;
 use crate::database::schema::resource_module;
 
 use crate::app::providers::interfaces::helpers::claims::{Claims, UserInClaims};
 use crate::app::providers::interfaces::helpers::config_getter::ConfigGetter;
+use crate::app::providers::interfaces::helpers::fetch::Fetch;
 
 use crate::app::providers::interfaces::slide::PubSlide;
 
@@ -23,7 +25,7 @@ pub async fn get_slide_ids_by_resource_id(db: &Db, id:i32) -> Result<Vec<i32>, d
     slide_ids
 }
 
-pub async fn get_multiple_slides(ids: Vec<i32>) -> Result<Vec<PubSlide>, Status> {
+pub async fn get_multiple_slides(fetch: &State<Fetch>, ids: Vec<i32>) -> Result<Vec<PubSlide>, Status> {
     // Prepare token for robot
     let robot_token = robot_token_generator().await;
     if let Err(_) = robot_token {
@@ -36,7 +38,7 @@ pub async fn get_multiple_slides(ids: Vec<i32>) -> Result<Vec<PubSlide>, Status>
         + "/multiple";
 
     // Request slides
-    let client = reqwest::Client::new();
+    let client = fetch.client.lock().await;
     let res = client
         .post(&slide_url)
         .header("Accept", "application/json")

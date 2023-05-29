@@ -1,12 +1,14 @@
 use diesel::prelude::*;
 
 use rocket::http::Status;
+use rocket::State;
 
 use crate::config::database::Db;
 use crate::database::schema::resource_form;
 
 use crate::app::providers::interfaces::helpers::claims::{Claims, UserInClaims};
 use crate::app::providers::interfaces::helpers::config_getter::ConfigGetter;
+use crate::app::providers::interfaces::helpers::fetch::Fetch;
 
 use crate::app::providers::interfaces::question::PubQuestion;
 
@@ -23,7 +25,7 @@ pub async fn get_question_ids_by_resource_id(db: &Db, id: i32) -> Result<Vec<i32
     question_ids
 }
 
-pub async fn get_multiple_questions(ids: Vec<i32>) -> Result<Vec<PubQuestion>, Status> {
+pub async fn get_multiple_questions(fetch: &State<Fetch>, ids: Vec<i32>) -> Result<Vec<PubQuestion>, Status> {
     // Prepare token for robot
     let robot_token = robot_token_generator().await;
     if let Err(_) = robot_token {
@@ -35,7 +37,7 @@ pub async fn get_multiple_questions(ids: Vec<i32>) -> Result<Vec<PubQuestion>, S
     let question_url = ConfigGetter::get_entity_url("question").unwrap_or("http://localhost:8011/api/v1/question".to_string()) + "/multiple";
 
     // Request questions
-    let client = reqwest::Client::new();
+    let client = fetch.client.lock().await;
     let res = client
         .post(&question_url)
         .header("Accept", "application/json")
