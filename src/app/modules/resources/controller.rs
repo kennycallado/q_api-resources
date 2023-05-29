@@ -53,6 +53,7 @@ pub fn get_index_none() -> Status {
 pub async fn get_show(fetch: &State<Fetch> , db: Db, claims: AccessClaims, id: i32) -> Result<Json<ResourceComplete>, Status> {
     match claims.0.user.role.name.as_str() {
         "admin" => show::get_show_admin(fetch, &db, claims.0.user, id).await,
+        "robot" => show::get_show_admin(fetch, &db, claims.0.user, id).await,
         _ => Err(Status::Unauthorized),
     }
 }
