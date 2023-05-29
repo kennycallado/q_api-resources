@@ -37,11 +37,78 @@ plan:
   #     command: "curl http://localhost:8003/auth/bypass/1/ | jq .access_token | tr -d '\"'"
   #   assign: TOKEN
   #   tags: [token]
-
+  
   - name: Heath checker
     request:
       url: '/health'
       headers:
         Accept: application/json
     tags: [ health ]
+
+  - name: Post Index without slides
+    request:
+      method: POST
+      url: '/api/v1/resource'
+      headers:
+        Accept: application/json
+        Authorization: Bearer {{ TOKEN }}
+        Content-Type: application/json
+      body: '{ "resource_type": "slides", "title": "Título 5", "description": "" }'
+    tags: [ post ]
+
+  - name: Post Index slides
+    request:
+      method: POST
+      url: '/api/v1/resource'
+      headers:
+        Accept: application/json
+        Authorization: Bearer {{ TOKEN }}
+        Content-Type: application/json
+      body: '{ "resource_type": "module", "title": "Título 4", "description": "", "content": { "slides": [ 1, 5, 8 ] } }'
+    tags: [ post-slides ]
+
+  - name: Post Index form
+    request:
+      method: POST
+      url: '/api/v1/resource'
+      headers:
+        Accept: application/json
+        Authorization: Bearer {{ TOKEN }}
+        Content-Type: application/json
+      body: '{ "resource_type": "form", "title": "Título 4", "description": "", "content": { "form": [ 5, 3, 1, 4 ] } }'
+    tags: [ post-form ]
+
+  - name: Get Index
+    request:
+      url: '/api/v1/resource'
+      headers:
+        Accept: application/json
+        Authorization: Bearer {{ TOKEN }}
+    tags: [ index ]
+
+  - name: Get Show
+    # with_items_range:
+    #   start: 1
+    #   step: 1
+    #   stop: 10
+    request:
+      # url: '/api/v1/resource/{{ item }}'
+      # url: '/api/v1/resource/1'
+      url: '/api/v1/resource/{{ iteration }}'
+      headers:
+        Accept: application/json
+        Authorization: Bearer {{ TOKEN }}
+    tags: [ show ]
+
+  - name: Put Show
+    request:
+      method: PUT
+      url: '/api/v1/resource/{{ iteration }}'
+      # url: '/api/v1/resource/1'
+      headers:
+        Accept: application/json
+        Authorization: Bearer {{ TOKEN }}
+        Content-Type: application/json
+      body: '{ "resource_type": "module", "title": "Título 5", "description": "Descripción para el título 5" }'
+    tags: [ put ]
 ---
