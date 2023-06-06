@@ -30,7 +30,7 @@ pub async fn post_create_admin(db: &Db, _admin: UserInClaims, new_resource: NewR
                         Some(slides) => {
                             let resource_slides = match resource.resource_type.as_str() {
                                 "module" => rm_repository::add_slides(db, resource.id, slides.clone()).await,
-                                "slide"  => rs_repository::add_slides(db, resource.id, slides.clone()).await,
+                                "slides"  => rs_repository::add_slides(db, resource.id, slides.clone()).await,
                                 _ => return Err(Status::InternalServerError),
                             };
 
