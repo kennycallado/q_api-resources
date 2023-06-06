@@ -73,7 +73,7 @@ Authorization: Bearer
 Content-Type: application/json
 
 {
-  "resource_type": "module",
+  "resource_type": "slides",
   "title": "Título 4",
   "description": "",
   "content": {
