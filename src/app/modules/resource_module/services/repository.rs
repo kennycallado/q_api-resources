@@ -3,14 +3,13 @@ use diesel::prelude::*;
 use rocket::http::Status;
 use rocket::State;
 
-use crate::config::database::Db;
+use crate::database::connection::Db;
 use crate::database::schema::resource_module;
 
-use crate::app::providers::interfaces::helpers::claims::{Claims, UserInClaims};
-use crate::app::providers::interfaces::helpers::config_getter::ConfigGetter;
-use crate::app::providers::interfaces::helpers::fetch::Fetch;
-
-use crate::app::providers::interfaces::slide::PubSlide;
+use crate::app::providers::config_getter::ConfigGetter;
+use crate::app::providers::models::slide::PubSlide;
+use crate::app::providers::services::claims::{Claims, UserInClaims};
+use crate::app::providers::services::fetch::Fetch;
 
 use crate::app::modules::resource_module::model::NewResourceModule;
 
@@ -34,8 +33,8 @@ pub async fn get_multiple_slides(fetch: &State<Fetch>, ids: Vec<i32>) -> Result<
     let robot_token = robot_token.unwrap();
 
     // Prepare url for slide
-    let slide_url = ConfigGetter::get_entity_url("slide").unwrap_or("http://localhost:8021/api/v1/slide".to_string())
-        + "/multiple";
+    let slide_url = ConfigGetter::get_entity_url("slide").unwrap_or("http://localhost:8021/api/v1/slide/".to_string())
+        + "multiple";
 
     // Request slides
     let client = fetch.client.lock().await;

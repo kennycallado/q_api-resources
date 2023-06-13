@@ -3,14 +3,13 @@ use diesel::prelude::*;
 use rocket::http::Status;
 use rocket::State;
 
-use crate::config::database::Db;
+use crate::database::connection::Db;
 use crate::database::schema::resource_form;
 
-use crate::app::providers::interfaces::helpers::claims::{Claims, UserInClaims};
-use crate::app::providers::interfaces::helpers::config_getter::ConfigGetter;
-use crate::app::providers::interfaces::helpers::fetch::Fetch;
-
-use crate::app::providers::interfaces::question::PubQuestion;
+use crate::app::providers::config_getter::ConfigGetter;
+use crate::app::providers::models::question::PubQuestion;
+use crate::app::providers::services::claims::{Claims, UserInClaims};
+use crate::app::providers::services::fetch::Fetch;
 
 use crate::app::modules::resource_form::model::{NewResourceForm, ResourceForm};
 
@@ -34,7 +33,8 @@ pub async fn get_multiple_questions(fetch: &State<Fetch>, ids: Vec<i32>) -> Resu
     let robot_token = robot_token.unwrap();
 
     // Prepare url for request
-    let question_url = ConfigGetter::get_entity_url("question").unwrap_or("http://localhost:8011/api/v1/question".to_string()) + "/multiple";
+    let question_url = ConfigGetter::get_entity_url("question").unwrap_or("http://localhost:8011/api/v1/question/".to_string())
+    + "multiple";
 
     // Request questions
     let client = fetch.client.lock().await;

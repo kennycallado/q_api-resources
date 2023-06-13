@@ -2,10 +2,10 @@ use rocket::http::Status;
 use rocket::State;
 use rocket::serde::json::Json;
 
-use crate::config::database::Db;
+use crate::database::connection::Db;
 
-use crate::app::providers::interfaces::helpers::claims::UserInClaims;
-use crate::app::providers::interfaces::helpers::fetch::Fetch;
+use crate::app::providers::services::claims::UserInClaims;
+use crate::app::providers::services::fetch::Fetch;
 
 use crate::app::modules::resource_slides::services::repository as rs_repository;
 use crate::app::modules::resource_module::services::repository as rm_repository;

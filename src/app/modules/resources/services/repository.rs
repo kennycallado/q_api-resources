@@ -1,6 +1,6 @@
 use diesel::prelude::*;
 
-use crate::config::database::Db;
+use crate::database:connection::Db;
 use crate::database::schema::resources;
 
 use crate::app::modules::resources::model::{NewResource, Resource};
