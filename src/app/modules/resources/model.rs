@@ -2,8 +2,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::database::schema::resources;
 
-use crate::app::providers::interfaces::question::PubQuestion;
-use crate::app::providers::interfaces::slide::PubSlide;
+use crate::app::providers::models::question::PubQuestion;
+use crate::app::providers::models::slide::PubSlide;
 
 #[derive(Debug, Clone, Deserialize, Serialize, Queryable, Identifiable)]
 #[serde(crate = "rocket::serde")]
@@ -74,7 +74,7 @@ impl From<NewResource> for NewResourceWithNewContent {
     }
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(crate = "rocket::serde")]
 pub struct ResourceComplete {
     pub id: i32,
@@ -132,7 +132,7 @@ pub struct NewContent {
     pub external: Option<i32>,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(crate = "rocket::serde")]
 pub struct ContentComplete {
     pub slides: Option<Vec<PubSlide>>,
