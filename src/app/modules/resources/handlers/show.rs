@@ -38,7 +38,7 @@ pub async fn get_show_admin(fetch: &State<Fetch>, db: &Db, _admin: UserInClaims,
                             let content = ContentComplete {
                                 slides: Some(slides),
                                 form: None,
-                                external: None,
+                                module: None,
                             };
 
                             let mut resource_complete: ResourceComplete = resource.into();
@@ -61,7 +61,7 @@ pub async fn get_show_admin(fetch: &State<Fetch>, db: &Db, _admin: UserInClaims,
                             let content = ContentComplete {
                                 slides: Some(slides),
                                 form: None,
-                                external: None,
+                                module: None,
                             };
 
                             let mut resource_complete: ResourceComplete = resource.into();
@@ -84,7 +84,7 @@ pub async fn get_show_admin(fetch: &State<Fetch>, db: &Db, _admin: UserInClaims,
                             let content = ContentComplete {
                                 slides: None,
                                 form: Some(questions),
-                                external: None,
+                                module: None,
                             };
 
                             let mut resource_complete: ResourceComplete = resource.into();
@@ -102,7 +102,7 @@ pub async fn get_show_admin(fetch: &State<Fetch>, db: &Db, _admin: UserInClaims,
             let content = ContentComplete {
                 slides: None,
                 form: None,
-                external: None,
+                module: None,
             };
 
             let mut resource_complete: ResourceComplete = resource.into();

@@ -52,7 +52,7 @@ Content-Type: application/json
   "description": ""
 }
 
-PUT http://localhost:8000/api/v1/resource/5
+PUT http://localhost:8000/api/v1/resource/6
 Accept: application/json
 Authorization: Bearer 
 Content-Type: application/json
@@ -60,8 +60,18 @@ Content-Type: application/json
 {
   "resource_type": "module",
   "title": "Título 5",
-  "description": "Descripción para el título 5"
+  "description": "Descripción para el título 5",
+  "content": {
+    "slides": null,
+    "form": null,
+    "module": [ 1, 2 ]
+  }
 }
+
+GET http://localhost:8000/api/v1/resource/6
+Accept: application/json
+Authorization: Bearer 
+Content-Type: application/json
 
 POST http://localhost:8000/api/v1/resource
 Accept: application/json
@@ -73,6 +83,8 @@ Content-Type: application/json
   "title": "Título 4",
   "description": "",
   "content": {
+    "form": null,
+    "module": null,
     "slides": [ 1, 5, 8 ]
   }
 }

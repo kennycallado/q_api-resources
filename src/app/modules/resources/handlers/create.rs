@@ -23,7 +23,7 @@ pub async fn post_create_admin(db: &Db, _admin: UserInClaims, new_resource: NewR
                     let mut content = Content {
                         slides: None,
                         form: None,
-                        external: None,
+                        module: None,
                     };
 
                     match new_content.slides {

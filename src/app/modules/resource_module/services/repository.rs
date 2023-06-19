@@ -3,6 +3,7 @@ use diesel::prelude::*;
 use rocket::http::Status;
 use rocket::State;
 
+use crate::app::modules::resource_slides::model::NewResourceSlide;
 use crate::database::connection::Db;
 use crate::database::schema::resource_module;
 
@@ -73,6 +74,35 @@ async fn robot_token_generator() -> Result<String, Status> {
             return Err(Status::InternalServerError);
         }
     }
+}
+
+pub async fn update(db: &Db, resouce_id: i32, slides: &Vec<i32>) -> Result<usize, diesel::result::Error> {
+    let mut new_slides: Vec<NewResourceModule> = Vec::new();
+
+    for slide in slides {
+        new_slides.push(NewResourceModule {
+            resource_id: resouce_id,
+            slide_id: slide.clone(),
+        });
+    }
+
+    // Delete old slides
+    db.run(move |conn| {
+        diesel::delete(
+            resource_module::table
+                .filter(resource_module::resource_id.eq(resouce_id))).execute(conn)
+        })
+    .await?;
+
+    let inserted_slides = db
+        .run(move |conn| {
+            diesel::insert_into(resource_module::table)
+                .values(&new_slides)
+                .execute(conn)
+        })
+        .await;
+
+    inserted_slides
 }
 
 pub async fn add_slides(db: &Db, resouce_id: i32, slides: Vec<i32>) -> Result<usize, diesel::result::Error> {

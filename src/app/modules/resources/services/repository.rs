@@ -3,7 +3,7 @@ use diesel::prelude::*;
 use crate::database::connection::Db;
 use crate::database::schema::resources;
 
-use crate::app::modules::resources::model::{NewResource, Resource};
+use crate::app::modules::resources::model::{NewResource, Resource, NewResourceWithNewContent, NewContent};
 
 pub async fn get_all(db: &Db) -> Result<Vec<Resource>, diesel::result::Error> {
     let resources = db
@@ -36,11 +36,7 @@ pub async fn create(
     resource
 }
 
-pub async fn update(
-    db: &Db,
-    id: i32,
-    new_resource: NewResource,
-) -> Result<Resource, diesel::result::Error> {
+pub async fn update(db: &Db, id: i32, new_resource: NewResource) -> Result<Resource, diesel::result::Error> {
     let resource = db
         .run(move |conn| {
             diesel::update(resources::table.find(id))

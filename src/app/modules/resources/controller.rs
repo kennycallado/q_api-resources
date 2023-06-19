@@ -77,7 +77,7 @@ pub async fn post_create_none(_new_resource: Json<NewResource>) -> Status {
 }
 
 #[put("/<id>", data = "<new_resource>", rank = 101)]
-pub async fn put_update(db: Db, claims: AccessClaims, id: i32, new_resource: Json<NewResource>) -> Result<Json<Resource>, Status> {
+pub async fn put_update(db: Db, claims: AccessClaims, id: i32, new_resource: Json<NewResourceWithNewContent>) -> Result<Json<ResourceWithContent>, Status> {
     match claims.0.user.role.name.as_str() {
         "admin" => update::put_update_admin(&db, claims.0.user, id, new_resource.into_inner()).await,
         _ => Err(Status::Unauthorized),

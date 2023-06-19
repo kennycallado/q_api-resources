@@ -111,7 +111,7 @@ pub struct ResourceWithContent {
 pub struct Content {
     pub slides: Option<Vec<i32>>,
     pub form: Option<Vec<i32>>,
-    pub external: Option<i32>,
+    pub module: Option<Vec<i32>>,
 }
 
 impl Default for Content {
@@ -119,7 +119,7 @@ impl Default for Content {
         Content {
             slides: None,
             form: None,
-            external: None,
+            module: None,
         }
     }
 }
@@ -129,7 +129,7 @@ impl Default for Content {
 pub struct NewContent {
     pub slides: Option<Vec<i32>>,
     pub form: Option<Vec<i32>>,
-    pub external: Option<i32>,
+    pub module: Option<Vec<i32>>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -137,5 +137,5 @@ pub struct NewContent {
 pub struct ContentComplete {
     pub slides: Option<Vec<PubSlide>>,
     pub form: Option<Vec<PubQuestion>>,
-    pub external: Option<i32>,
+    pub module: Option<Vec<i32>>,
 }

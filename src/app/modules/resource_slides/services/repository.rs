@@ -130,3 +130,32 @@ pub async fn add_slides(db: &Db, resouce_id: i32, slides: Vec<i32>) -> Result<us
 
     inserted_slides
 }
+
+pub async fn update(db: &Db, resouce_id: i32, slides: &Vec<i32>) -> Result<usize, diesel::result::Error> {
+    let mut new_slides: Vec<NewResourceSlide> = Vec::new();
+
+    for slide in slides {
+        new_slides.push(NewResourceSlide {
+            resource_id: resouce_id,
+            slide_id: slide.clone(),
+        });
+    }
+
+    // Delete old slides
+    db.run(move |conn| {
+        diesel::delete(
+            resource_slides::table
+                .filter(resource_slides::resource_id.eq(resouce_id))).execute(conn)
+        })
+    .await?;
+
+    let inserted_slides = db
+        .run(move |conn| {
+            diesel::insert_into(resource_slides::table)
+                .values(&new_slides)
+                .execute(conn)
+        })
+        .await;
+
+    inserted_slides
+}

@@ -78,6 +78,35 @@ pub async fn add_questions(db: &Db, resource_id: i32, question_ids: Vec<i32>) ->
     inserted_questions
 }
 
+pub async fn update(db: &Db, resouce_id: i32, questions: &Vec<i32>) -> Result<usize, diesel::result::Error> {
+    let mut new_form: Vec<NewResourceForm> = Vec::new();
+
+    for q in questions {
+        new_form.push(NewResourceForm {
+            resource_id: resouce_id,
+            question_id: q.clone(),
+        });
+    }
+
+    // Delete old slides
+    db.run(move |conn| {
+        diesel::delete(
+            resource_form::table
+                .filter(resource_form::resource_id.eq(resouce_id))).execute(conn)
+        })
+    .await?;
+
+    let inserted_questions = db
+        .run(move |conn| {
+            diesel::insert_into(resource_form::table)
+                .values(&new_form)
+                .execute(conn)
+        })
+        .await;
+
+    inserted_questions
+}
+
 async fn robot_token_generator() -> Result<String, Status> {
     let mut claims: Claims = Claims::from(UserInClaims::default());
 
