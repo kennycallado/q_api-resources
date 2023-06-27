@@ -13,8 +13,7 @@ use crate::app::modules::resources::model::{ NewResource, Resource, ResourceComp
 
 pub fn routes() -> Vec<rocket::Route> {
     routes![
-        options_index,
-        options_show,
+        options_all,
         get_index,
         get_index_none,
         get_show,
@@ -26,13 +25,8 @@ pub fn routes() -> Vec<rocket::Route> {
     ]
 }
 
-#[options("/")]
-pub async fn options_index() -> Status {
-    Status::Ok
-}
-
-#[options("/<_id>")]
-pub async fn options_show(_id: i32) -> Status {
+#[options("/<_..>")]
+pub async fn options_all() -> Status {
     Status::Ok
 }
 
