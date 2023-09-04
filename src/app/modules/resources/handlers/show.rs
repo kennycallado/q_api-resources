@@ -2,8 +2,10 @@ use rocket::http::Status;
 use rocket::State;
 use rocket::serde::json::Json;
 
+use crate::app::providers::models::question::PubQuestion;
 use crate::database::connection::Db;
 
+use crate::app::providers::models::slide::PubSlide;
 use crate::app::providers::services::claims::UserInClaims;
 use crate::app::providers::services::fetch::Fetch;
 
@@ -14,27 +16,53 @@ use crate::app::modules::resource_form::services::repository   as rf_repository;
 use crate::app::modules::resources::model::{ContentComplete, ResourceComplete};
 use crate::app::modules::resources::services::repository as resources_repository;
 
-pub async fn get_show_admin(fetch: &State<Fetch>, db: &Db, _admin: UserInClaims, id: i32) -> Result<Json<ResourceComplete>, Status> {
-    // get the resource
-    // get the resouce type
-    // - get the slides
-    // - get the form
-    // - get the external
-    // return the resource with the content
+fn sort_slides(slides: &mut Vec<PubSlide>, ids: Vec<i32>) {
+    let mut sorted_slides = Vec::new();
 
-    let resource = resources_repository::get_by_id(db, id).await;
-    if let Err(_) = resource {
-        return Err(Status::NotFound);
+    for id in ids {
+        for slide in slides.clone() {
+            if slide.id == id {
+                sorted_slides.push(slide);
+            }
+        }
     }
-    let resource = resource.unwrap();
+
+    slides.clear();
+    slides.append(&mut sorted_slides);
+}
+
+fn sort_form(questions: &mut Vec<PubQuestion>, ids: Vec<i32>) {
+    let mut sorted_questions = Vec::new();
+
+    for id in ids {
+        for question in questions.clone() {
+            if question.id == id {
+                sorted_questions.push(question);
+            }
+        }
+    }
+
+    questions.clear();
+    questions.append(&mut sorted_questions);
+}
+
+pub async fn get_show_admin(fetch: &State<Fetch>, db: &Db, _admin: UserInClaims, id: i32) -> Result<Json<ResourceComplete>, Status> {
+    let resource = resources_repository::get_by_id(db, id).await;
+
+    let resource = match resource {
+        Ok(resource) => resource,
+        Err(_) => return Err(Status::NotFound),
+    };
 
     match resource.resource_type.as_str() {
         "slides" => {
             match rs_repository::get_slide_ids_by_resource_id(db, id).await {
                 Ok(ids) => {
 
-                    match rs_repository::get_multiple_slides(fetch, ids).await {
-                        Ok(slides) => {
+                    match rs_repository::get_multiple_slides(fetch, ids.clone()).await {
+                        Ok(mut slides) => {
+                            sort_slides(&mut slides, ids);
+
                             let content = ContentComplete {
                                 slides: Some(slides),
                                 form: None,
@@ -56,8 +84,10 @@ pub async fn get_show_admin(fetch: &State<Fetch>, db: &Db, _admin: UserInClaims,
             match rm_repository::get_slide_ids_by_resource_id(db, id).await {
                 Ok(ids) => {
 
-                    match rm_repository::get_multiple_slides(fetch, ids).await {
-                        Ok(slides) => {
+                    match rm_repository::get_multiple_slides(fetch, ids.clone()).await {
+                        Ok(mut slides) => {
+                            sort_slides(&mut slides, ids);
+
                             let content = ContentComplete {
                                 slides: Some(slides),
                                 form: None,
@@ -79,8 +109,10 @@ pub async fn get_show_admin(fetch: &State<Fetch>, db: &Db, _admin: UserInClaims,
             match rf_repository::get_question_ids_by_resource_id(db, id).await {
                 Ok(ids) => {
 
-                    match rf_repository::get_multiple_questions(fetch, ids).await {
-                        Ok(questions) => {
+                    match rf_repository::get_multiple_questions(fetch, ids.clone()).await {
+                        Ok(mut questions) => {
+                            sort_form(&mut questions, ids);
+
                             let content = ContentComplete {
                                 slides: None,
                                 form: Some(questions),
