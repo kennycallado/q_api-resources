@@ -52,19 +52,20 @@ Content-Type: application/json
   "description": ""
 }
 
-PUT http://localhost:8000/api/v1/resource/6
+PUT http://localhost:8000/api/v1/resource/5
 Accept: application/json
 Authorization: Bearer 
 Content-Type: application/json
 
 {
-  "resource_type": "module",
   "title": "Título 5",
   "description": "Descripción para el título 5",
+  "resource_type": "module",
+  "sort_order": [2, 1],
   "content": {
     "slides": null,
     "form": null,
-    "module": [ 1, 2 ]
+    "module": [ 2, 1 ]
   }
 }
 
