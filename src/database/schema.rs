@@ -28,6 +28,7 @@ diesel::table! {
     resources (id) {
         id -> Int4,
         resource_type -> Varchar,
+        sort_order -> Array<Nullable<Int4>>,
         title -> Varchar,
         description -> Varchar,
     }

@@ -16,6 +16,9 @@ pub async fn get_index_admin(
 
     match resources {
         Ok(slides) => Ok(Json(slides)),
-        Err(_) => Err(Status::InternalServerError),
+        Err(e) => {
+            println!("Error: {}", e);
+            Err(Status::InternalServerError)
+        },
     }
 }

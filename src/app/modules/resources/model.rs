@@ -10,6 +10,7 @@ use crate::app::providers::models::slide::PubSlide;
 pub struct Resource {
     pub id: i32,
     pub resource_type: String,
+    pub sort_order: Vec<Option<i32>>,
     pub title: String,
     pub description: String,
 }
@@ -19,6 +20,7 @@ pub struct Resource {
 #[serde(crate = "rocket::serde")]
 pub struct NewResource {
     pub resource_type: String,
+    pub sort_order: Option<Vec<Option<i32>>>,
     pub title: String,
     pub description: String,
 }
@@ -27,6 +29,7 @@ impl From<Resource> for NewResource {
     fn from(resource: Resource) -> Self {
         NewResource {
             resource_type: resource.resource_type,
+            sort_order: Some(resource.sort_order),
             title: resource.title,
             description: resource.description,
         }
@@ -37,6 +40,7 @@ impl From<NewResourceWithNewContent> for NewResource {
     fn from(resource: NewResourceWithNewContent) -> Self {
         NewResource {
             resource_type: resource.resource_type,
+            sort_order: resource.sort_order,
             title: resource.title,
             description: resource.description,
         }
@@ -47,6 +51,7 @@ impl From<NewResourceWithNewContent> for NewResource {
 #[serde(crate = "rocket::serde")]
 pub struct NewResourceWithNewContent {
     pub resource_type: String,
+    pub sort_order: Option<Vec<Option<i32>>>,
     pub title: String,
     pub description: String,
     pub content: Option<NewContent>,
@@ -56,6 +61,7 @@ impl From<Resource> for NewResourceWithNewContent {
     fn from(resource: Resource) -> Self {
         NewResourceWithNewContent {
             resource_type: resource.resource_type,
+            sort_order: Some(resource.sort_order),
             title: resource.title,
             description: resource.description,
             content: None,
@@ -67,6 +73,7 @@ impl From<NewResource> for NewResourceWithNewContent {
     fn from(resource: NewResource) -> Self {
         NewResourceWithNewContent {
             resource_type: resource.resource_type,
+            sort_order: resource.sort_order,
             title: resource.title,
             description: resource.description,
             content: None,
@@ -79,6 +86,7 @@ impl From<NewResource> for NewResourceWithNewContent {
 pub struct ResourceComplete {
     pub id: i32,
     pub resource_type: String,
+    pub sort_order: Vec<Option<i32>>,
     pub title: String,
     pub description: String,
     pub content: Option<ContentComplete>,
@@ -89,6 +97,7 @@ impl From<Resource> for ResourceComplete {
         ResourceComplete {
             id: resource.id,
             resource_type: resource.resource_type,
+            sort_order: resource.sort_order,
             title: resource.title,
             description: resource.description,
             content: None,
@@ -101,6 +110,7 @@ impl From<Resource> for ResourceComplete {
 pub struct ResourceWithContent {
     pub id: i32,
     pub resource_type: String,
+    pub sort_order: Vec<Option<i32>>,
     pub title: String,
     pub description: String,
     pub content: Option<Content>,
