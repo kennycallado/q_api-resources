@@ -47,7 +47,6 @@ pub async fn put_update_admin(db: &Db, _admin: UserInClaims, id: i32, new_resour
                 title: resource.title,
                 description: resource.description,
                 resource_type: resource.resource_type,
-                sort_order: resource.sort_order,
                 content: Some(Content {
                     slides: content.slides,
                     form: content.form,

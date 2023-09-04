@@ -61,7 +61,6 @@ Content-Type: application/json
   "title": "Título 5",
   "description": "Descripción para el título 5",
   "resource_type": "module",
-  "sort_order": [2, 1],
   "content": {
     "slides": null,
     "form": null,

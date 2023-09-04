@@ -65,7 +65,6 @@ pub async fn post_create_admin(db: &Db, _admin: UserInClaims, new_resource: NewR
                         title: resource.title,
                         description: resource.description,
                         resource_type: resource.resource_type,
-                        sort_order: resource.sort_order,
                         content: Some(content),
                     }
                 },
@@ -75,7 +74,6 @@ pub async fn post_create_admin(db: &Db, _admin: UserInClaims, new_resource: NewR
                         title: resource.title,
                         description: resource.description,
                         resource_type: resource.resource_type,
-                        sort_order: resource.sort_order,
                         content: None,
                     }
                 },
