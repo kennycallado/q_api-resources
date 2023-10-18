@@ -60,11 +60,11 @@ Content-Type: application/json
 {
   "title": "Título 5",
   "description": "Descripción para el título 5",
-  "resource_type": "module",
+  "resource_type": "form",
   "content": {
     "slides": null,
-    "form": null,
-    "module": [ 2, 1 ]
+    "form": [ 5, 2, 1, 4, 5 ],
+    "module": null
   }
 }
 
